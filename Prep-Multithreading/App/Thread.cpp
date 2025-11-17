@@ -1,15 +1,17 @@
 #include "Thread.h"
 #include <iostream>
 
-Thread::Thread(LPTHREAD_START_ROUTINE _routine, void* _params, unsigned long _ID, unsigned int _stackSize) : 
+Thread::Thread(LPTHREAD_START_ROUTINE _routine, void* _params, unsigned long _ID, unsigned int _stackSize) :
 	m_pRoutine(),
 	m_params(_params),
 	m_stackSize(_stackSize),
 	m_ID(_ID),
-	m_handle()
+	m_handle(),
+	m_isPaused(true)
 {
 	SetRoutine(_routine);
 	SetParams(_params);
+	Create();
 }
 
 Thread::~Thread()
@@ -23,7 +25,7 @@ void Thread::Create()
 {
 	CreateThread(
 		NULL,				// Security attribs
-		m_stackSize,		// Taille de la pile
+		m_stackSize,		// Taille de la pile (si 0, par defaut 1Mb)
 		m_pRoutine,			// Point d'entree du thread ( ~= methode qui constitue le thread)
 		m_params,			// Parametres a envoyer dans ledit point d'entree
 		0,					// Delai de creation du thread (ici il demarre immediatement)
@@ -37,6 +39,7 @@ void Thread::Create()
 		ExitProcess(-1);
 	}
 
+	m_isPaused = false;
 	Routine();
 }
 
@@ -61,12 +64,19 @@ bool Thread::Terminate()
 
 int Thread::Pause()
 {
+	m_isPaused = true;
 	return SuspendThread(m_handle);
 }
 
 int Thread::Resume()
 {
+	m_isPaused = false;
 	return ResumeThread(m_handle);
+}
+
+bool Thread::IsPaused()
+{
+	return m_isPaused;
 }
 
 HANDLE& Thread::GetHandle()

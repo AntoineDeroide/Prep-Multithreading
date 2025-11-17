@@ -5,14 +5,10 @@
 class App
 {
 public:
-	void Run();
+	static void Run(int* argc, char** argv);
 
 	App() = default;
 	~App() = default;
-
-private:
-
-
 };
 
 #endif // APP_H

@@ -15,16 +15,14 @@ public:
 	);
 	~Thread();
 
-	void SetRoutine(DWORD (*_routine)(void*)); // Le premier void est le type de retour, ensuite le deuxieme void* correspond a l'argument
-	void SetParams(void* _params);
+	int Pause();
+	int Resume();
+	bool IsPaused();
 
 	HANDLE& GetHandle();
 
-	// A deplacer dans ThreadManager ?
-	//////////////////
-	int Pause();	//
-	int Resume();	//
-	//////////////////
+	void SetRoutine(DWORD (*_routine)(void*)); // Le premier void est le type de retour, ensuite le deuxieme void* correspond a l'argument
+	void SetParams(void* _params);
 
 private:
 	DWORD (*m_pRoutine)(void* _params); // declaration d'un pointeur de fonction
@@ -37,17 +35,15 @@ private:
 
 	void Create();
 	void Routine(); // ( / comportement du thread)
+	bool Terminate();
 
 public:
 	//void EnterCS();
 	//void LeaveCS();
+	bool IsInCS();
 
 private:
 	//bool m_isInCS;
-
-	bool Terminate();
-
-
 };
 
 #endif // THREAD_H
