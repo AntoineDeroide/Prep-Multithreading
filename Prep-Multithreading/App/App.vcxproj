@@ -132,6 +132,10 @@
     <ClInclude Include="App.h" />
     <ClInclude Include="Thread.h" />
     <ClInclude Include="ThreadManager.h" />
+    <ClInclude Include="ThreadQueue.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="notes.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

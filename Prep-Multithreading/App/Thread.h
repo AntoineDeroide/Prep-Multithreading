@@ -33,17 +33,17 @@ private:
 
 	bool m_isPaused;
 
-	void Create();
+	void Init();
 	void Routine(); // ( / comportement du thread)
 	bool Terminate();
 
 public:
-	//void EnterCS();
-	//void LeaveCS();
 	bool IsInCS();
+	void EnterCS();
+	void LeaveCS();
 
 private:
-	//bool m_isInCS;
+	bool m_isInCS;
 };
 
 #endif // THREAD_H

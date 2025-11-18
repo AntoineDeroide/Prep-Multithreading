@@ -11,7 +11,7 @@ Thread::Thread(LPTHREAD_START_ROUTINE _routine, void* _params, unsigned long _ID
 {
 	SetRoutine(_routine);
 	SetParams(_params);
-	Create();
+	Init();
 }
 
 Thread::~Thread()
@@ -21,7 +21,7 @@ Thread::~Thread()
 	Terminate();
 }
 
-void Thread::Create()
+void Thread::Init()
 {
 	CreateThread(
 		NULL,				// Security attribs
@@ -58,7 +58,7 @@ void Thread::Routine()
 
 bool Thread::Terminate() 
 {
-	CloseHandle(m_handle);
+	return CloseHandle(m_handle);
 }
 
 
@@ -93,3 +93,19 @@ void Thread::SetParams(void* _params)
 {
 	m_params = _params;
 }
+
+bool Thread::IsInCS()
+{
+	return m_isInCS;
+}
+
+void Thread::EnterCS()
+{
+	m_isInCS = true;
+}
+
+void Thread::LeaveCS()
+{
+	m_isInCS = false;
+}
+

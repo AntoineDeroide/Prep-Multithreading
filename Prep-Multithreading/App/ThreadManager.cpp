@@ -3,13 +3,16 @@
 
 #include <iostream>
 
-ThreadManager::ThreadManager() : m_threadMap(), m_nextID(0), m_activeThreads(), m_pausedThreads(), m_blockingThread(nullptr)
+ThreadManager::ThreadManager() : m_threadMap(), m_nextID(0), m_activeThreads(), m_pausedThreads()/*, m_CS()*/
 {
-	// code...
+	//InitCS();
 }
 
 ThreadManager::~ThreadManager()
 {
+	/*LeaveCriticalSection(m_CS.self);
+	DeleteCriticalSection(m_CS.self);*/
+
 	for (auto i = m_threadMap.begin(); i != m_threadMap.end(); i++)
 	{
 		delete i->second;
@@ -36,8 +39,13 @@ Thread* ThreadManager::CreateThread(LPTHREAD_START_ROUTINE _routine, void* _para
 
 bool ThreadManager::DeleteThread(unsigned long _ID)
 {
+	if (m_threadMap.find(_ID) == m_threadMap.end())
+		return false;
+
 	Thread* pThread = m_threadMap.find(_ID)->second;
-	delete pThread;
+	if (pThread != nullptr)
+		delete &pThread;
+	return true;
 }
 
 bool ThreadManager::CheckForDeadLock()
@@ -62,7 +70,7 @@ bool ThreadManager::CheckForDeadLock()
 
 bool ThreadManager::PauseThread(unsigned long _ID)
 {
-	Thread* toHandle = m_threadMap.find(_ID)->second;
+	Thread* toHandle = m_threadMap[_ID];
 
 	if (toHandle == nullptr)
 	{
@@ -82,12 +90,14 @@ bool ThreadManager::PauseThread(unsigned long _ID)
 		return false;
 	}
 
+	m_pausedThreads.insert(toHandle);
+
 	return true;
 }
 
 bool ThreadManager::ResumeThread(unsigned long _ID)
 {
-	Thread* toHandle = m_threadMap.find(_ID)->second;
+	Thread* toHandle = m_threadMap[_ID];
 
 	if (toHandle == nullptr)
 	{
@@ -106,10 +116,54 @@ bool ThreadManager::ResumeThread(unsigned long _ID)
 		std::cout << "ThreadManager::ResumeThread() : Failed to resume thread " << _ID << std::endl;
 		return false;
 	}
+	m_activeThreads.insert(toHandle);
 
 	return true;
 }
 
+//void ThreadManager::InitCS()
+//{
+//	InitializeCriticalSection(m_CS.self);
+//	m_CS.blockingThread = nullptr;
+//	m_CS.threadID = -1;
+//	m_CS.status = CriticalSectionStatus::FREE;
+//}
+
+//bool ThreadManager::InsertInCS(unsigned long _ID)
+//{
+//	if (m_CS.self == nullptr)
+//		InitCS();
+//
+//	if (m_threadMap.find(_ID) != m_threadMap.end())
+//	{
+//		m_CS.blockingThread = m_threadMap[_ID];
+//		m_CS.threadID = _ID;
+//		m_threadMap[_ID]->EnterCS();
+//	}
+//
+//	TryEnterCriticalSection(m_CS.self);
+//	EnterCriticalSection(m_CS.self);
+//	m_CS.status = CriticalSectionStatus::BLOCKED;
+//
+//	return false;
+//}
+//
+//bool ThreadManager::FreeCS()
+//{
+//	if (m_CS.self == nullptr || m_CS.blockingThread == nullptr)
+//	{
+//		InitCS();
+//		return false;
+//	}
+//	
+//	LeaveCriticalSection(m_CS.self);
+//
+//	m_CS.blockingThread = nullptr;
+//	m_CS.threadID = -1;
+//	m_CS.status = CriticalSectionStatus::FREE;
+//
+//	return false;
+//}
 
 void ThreadManager::Update()
 {
@@ -118,8 +172,8 @@ void ThreadManager::Update()
 
 	for (auto i = m_threadMap.begin(); i != m_threadMap.end(); i++)
 	{
-		if (i->second->IsInCS())
-			m_blockingThread = i->second;
+		//if (i->second->IsInCS())
+		//	m_CS.blockingThread = i->second;
 		
 		/*if (i->second->IsPaused())
 		{

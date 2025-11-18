@@ -38,5 +38,11 @@
     <ClInclude Include="Thread.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="ThreadQueue.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="notes.md" />
   </ItemGroup>
 </Project>
