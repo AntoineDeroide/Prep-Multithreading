@@ -38,7 +38,7 @@
     <ClInclude Include="Thread.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="ThreadQueue.hpp">
+    <ClInclude Include="SafeQueue.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

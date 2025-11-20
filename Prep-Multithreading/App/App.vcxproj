@@ -132,7 +132,7 @@
     <ClInclude Include="App.h" />
     <ClInclude Include="Thread.h" />
     <ClInclude Include="ThreadManager.h" />
-    <ClInclude Include="ThreadQueue.hpp" />
+    <ClInclude Include="SafeQueue.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="notes.md" />
