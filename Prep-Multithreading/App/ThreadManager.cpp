@@ -3,20 +3,23 @@
 
 #include <iostream>
 
-ThreadManager::ThreadManager() : m_threadMap(), m_nextID(0), m_activeThreads(), m_pausedThreads()/*, m_CS()*/
+ThreadManager::ThreadManager() : m_threadMap(), m_nextID(0), m_activeThreads(), m_pausedThreads(), m_CS()
 {
-	//InitCS();
+	m_CS.self = new CRITICAL_SECTION;
+	InitCS();
 }
 
 ThreadManager::~ThreadManager()
 {
-	/*LeaveCriticalSection(m_CS.self);
-	DeleteCriticalSection(m_CS.self);*/
+	LeaveCriticalSection(m_CS.self);
+	DeleteCriticalSection(m_CS.self);
 
 	for (auto i = m_threadMap.begin(); i != m_threadMap.end(); i++)
 	{
 		delete i->second;
 	}
+
+	delete m_CS.self;
 }
 
 ThreadManager& ThreadManager::Instance()
@@ -173,17 +176,17 @@ void ThreadManager::Update()
 	for (auto i = m_threadMap.begin(); i != m_threadMap.end(); i++)
 	{
 		i->second->Routine();
-		//if (i->second->IsInCS())
-		//	m_CS.blockingThread = i->second;
+		if (i->second->IsInCS())
+			m_CS.blockingThread = i->second;
 		
-		/*if (i->second->IsPaused())
+		if (i->second->IsPaused())
 		{
 			if (m_activeThreads.find(i->second) != m_activeThreads.end())
 			{
 				m_pausedThreads.insert(i->second);
 				m_activeThreads.erase(i->second);
 			}
-		}*/
+		}
 
 		// code...
 	}
