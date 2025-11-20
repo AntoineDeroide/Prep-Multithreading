@@ -98,7 +98,6 @@ inline void SafeQueue<Type>::Pop()
 
 	EnterCriticalSection(m_CS);
 		isCSActive = true;
-		delete m_elements[0];
 
 		for (int i = 1; i <= m_size; i++)
 		{
