@@ -19,6 +19,8 @@ public:
 	int Resume();
 	bool IsPaused();
 
+	void Routine();
+
 	HANDLE& GetHandle();
 
 	void SetRoutine(DWORD (*_routine)(void*)); // Le premier void est le type de retour, ensuite le deuxieme void* correspond a l'argument
@@ -34,7 +36,6 @@ private:
 	bool m_isPaused;
 
 	void Init();
-	void Routine(); // ( / comportement du thread)
 	bool Terminate();
 
 public:

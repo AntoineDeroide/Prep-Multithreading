@@ -34,7 +34,6 @@ public:
 	bool InsertInCS(unsigned long _ID);
 	bool FreeCS();*/
 
-
 	bool CheckForDeadLock();
 	//void HandleDeadLock(); // Possible de sortir de la deadlock ? En terminant les threads "facultatifs" ou en en mettant en pause ?
 

@@ -172,6 +172,7 @@ void ThreadManager::Update()
 
 	for (auto i = m_threadMap.begin(); i != m_threadMap.end(); i++)
 	{
+		i->second->Routine();
 		//if (i->second->IsInCS())
 		//	m_CS.blockingThread = i->second;
 		

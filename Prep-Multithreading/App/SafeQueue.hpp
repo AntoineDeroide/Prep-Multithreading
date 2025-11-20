@@ -32,12 +32,12 @@ private:
 /////////////////////////////////////////////////////////////////////////
 
 template <typename Type>
-inline SafeQueue<Type>::SafeQueue(unsigned int _size) : m_size(_size)
+inline SafeQueue<Type>::SafeQueue(unsigned int _size) : m_capacity(_size), m_size(0), m_CS(new CRITICAL_SECTION), isCSActive(false)
 {
 	InitializeCriticalSection(m_CS);
 
-	m_elements = new Type[m_size];
-	for (int i = 0; i < m_size; i++)
+	m_elements = new Type[m_capacity];
+	for (int i = 0; i < m_capacity; i++)
 	{
 		m_elements[i] = Type();
 	}
@@ -72,7 +72,7 @@ inline void SafeQueue<Type>::Push(void* _data)
 		if (reinterpret_cast<Type>(_data) == false || m_isFull == true)
 			return;
 	
-		m_elements[m_size] = reinterpret_cast<Type>(_data);
+		m_elements[0] = reinterpret_cast<Type>(_data);
 		if (m_size + 1 < m_capacity)
 			m_size++;
 		else

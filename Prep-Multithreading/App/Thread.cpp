@@ -40,7 +40,7 @@ void Thread::Init()
 	}
 
 	m_isPaused = false;
-	Routine();
+	//Routine();
 }
 
 void Thread::Routine()

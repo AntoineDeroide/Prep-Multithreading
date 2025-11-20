@@ -4,11 +4,10 @@
 
 #include <iostream>
 
-DWORD WINAPI ThreadRoutineExample(SafeQueue<char> _params)
+DWORD WINAPI ThreadRoutineExample(SafeQueue<char>* _params)
 {
-    std::cout << "My char is " << _params[0] << ".\n";
-    //std::cout << "this is an example\n";
-    return 0;
+    std::cout << "My char is " << (*_params)[0] << "\n";
+    return 1;
 }
 
 void App::Run(int* argc, char** argv)
@@ -29,7 +28,7 @@ void App::Run(int* argc, char** argv)
     
     hThreadManager->CreateThread(LPTHREAD_START_ROUTINE(ThreadRoutineExample), &queue);
     
-    while (true) 
+    while (true)
     {
         hThreadManager->Update();
     }
