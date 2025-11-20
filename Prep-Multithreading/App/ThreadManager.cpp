@@ -3,16 +3,13 @@
 
 #include <iostream>
 
-ThreadManager::ThreadManager() : m_threadMap(), m_nextID(0), m_activeThreads(), m_pausedThreads()/*, m_CS()*/
+ThreadManager::ThreadManager() : m_threadMap(), m_nextID(0), m_activeThreads(), m_pausedThreads()
 {
-	//InitCS();
+	// code...
 }
 
 ThreadManager::~ThreadManager()
 {
-	/*LeaveCriticalSection(m_CS.self);
-	DeleteCriticalSection(m_CS.self);*/
-
 	for (auto i = m_threadMap.begin(); i != m_threadMap.end(); i++)
 	{
 		delete i->second;
@@ -46,26 +43,6 @@ bool ThreadManager::DeleteThread(unsigned long _ID)
 	if (pThread != nullptr)
 		delete &pThread;
 	return true;
-}
-
-bool ThreadManager::CheckForDeadLock()
-{
-	int count = 0;
-	for (auto i = m_threadMap.begin(); i != m_threadMap.end(); i++)
-	{
-		if (i->second->IsInCS())
-		{
-			count++;
-		}
-
-		if (count > 1)
-		{
-			std::cout << "[ThreadManager::CheckForDeadLock() : Multiple threads entered the programs Critical Section]\n";
-			std::cout << "[ThreadManager::CheckForDeadLock() : Shutdown required]\n";
-			return true;
-		}
-	}
-	return false;
 }
 
 bool ThreadManager::PauseThread(unsigned long _ID)
@@ -121,69 +98,11 @@ bool ThreadManager::ResumeThread(unsigned long _ID)
 	return true;
 }
 
-//void ThreadManager::InitCS()
-//{
-//	InitializeCriticalSection(m_CS.self);
-//	m_CS.blockingThread = nullptr;
-//	m_CS.threadID = -1;
-//	m_CS.status = CriticalSectionStatus::FREE;
-//}
-
-//bool ThreadManager::InsertInCS(unsigned long _ID)
-//{
-//	if (m_CS.self == nullptr)
-//		InitCS();
-//
-//	if (m_threadMap.find(_ID) != m_threadMap.end())
-//	{
-//		m_CS.blockingThread = m_threadMap[_ID];
-//		m_CS.threadID = _ID;
-//		m_threadMap[_ID]->EnterCS();
-//	}
-//
-//	TryEnterCriticalSection(m_CS.self);
-//	EnterCriticalSection(m_CS.self);
-//	m_CS.status = CriticalSectionStatus::BLOCKED;
-//
-//	return false;
-//}
-//
-//bool ThreadManager::FreeCS()
-//{
-//	if (m_CS.self == nullptr || m_CS.blockingThread == nullptr)
-//	{
-//		InitCS();
-//		return false;
-//	}
-//	
-//	LeaveCriticalSection(m_CS.self);
-//
-//	m_CS.blockingThread = nullptr;
-//	m_CS.threadID = -1;
-//	m_CS.status = CriticalSectionStatus::FREE;
-//
-//	return false;
-//}
-
 void ThreadManager::Update()
 {
-	if (CheckForDeadLock())
-		return;
-
 	for (auto i = m_threadMap.begin(); i != m_threadMap.end(); i++)
 	{
 		i->second->Routine();
-		//if (i->second->IsInCS())
-		//	m_CS.blockingThread = i->second;
-		
-		/*if (i->second->IsPaused())
-		{
-			if (m_activeThreads.find(i->second) != m_activeThreads.end())
-			{
-				m_pausedThreads.insert(i->second);
-				m_activeThreads.erase(i->second);
-			}
-		}*/
 
 		// code...
 	}

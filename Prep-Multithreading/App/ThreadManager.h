@@ -8,14 +8,6 @@
 
 class Thread;
 
-enum CriticalSectionStatus : char
-{
-	FREE,
-	BLOCKED,
-
-	UNDEFINED
-};
-
 class ThreadManager
 {
 public:
@@ -30,13 +22,6 @@ public:
 	bool PauseThread(unsigned long _ID);
 	bool ResumeThread(unsigned long _ID);
 
-	/*void InitCS();
-	bool InsertInCS(unsigned long _ID);
-	bool FreeCS();*/
-
-	bool CheckForDeadLock();
-	//void HandleDeadLock(); // Possible de sortir de la deadlock ? En terminant les threads "facultatifs" ou en en mettant en pause ?
-
 	void Update();
 
 private:
@@ -45,14 +30,6 @@ private:
 	std::set<Thread*> m_pausedThreads;
 	
 	unsigned int m_nextID;
-
-	//struct // m_CS
-	//{
-	//	LPCRITICAL_SECTION self;
-	//	CriticalSectionStatus status;
-	//	Thread* blockingThread;
-	//	unsigned long threadID;
-	//} m_CS;
 };
 
 #endif // THREAD_MANAGER_H
