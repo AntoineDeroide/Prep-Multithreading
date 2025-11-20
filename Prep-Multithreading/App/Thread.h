@@ -27,7 +27,7 @@ public:
 	void SetParams(void* _params);
 
 private:
-	DWORD (*m_pRoutine)(void* _params); // declaration d'un pointeur de fonction
+	DWORD (*m_pRoutine)(void* _params); 
 	void* m_params;
 	unsigned int m_stackSize;
 	unsigned long m_ID;
